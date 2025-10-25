@@ -1,0 +1,233 @@
+<!-- src/pdf/templates/creative-activity-analysis.hbs -->
+
+<html lang='ko'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>창의적 체험활동 분석 보고서</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Noto Sans KR', sans-serif;
+        line-height: 1.8;
+        color: #000;
+        margin: 0;
+        padding: 40px;
+        background-color: #ffffff;
+        font-size: 14px;
+      }
+
+      .section {
+        margin-bottom: 40px;
+        page-break-inside: avoid;
+      }
+
+      .section-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 20px;
+      }
+
+      .subsection-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #000;
+        margin: 25px 0 15px 0;
+      }
+
+      .content {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 5px;
+        white-space: pre-wrap;
+        font-size: 14px;
+        line-height: 1.8;
+        border-left: 4px solid #ddd;
+        margin-bottom: 20px;
+      }
+
+      .analysis-content {
+        background-color: #f0f8f0;
+        padding: 20px;
+        border-radius: 5px;
+        white-space: pre-wrap;
+        font-size: 14px;
+        line-height: 1.8;
+        border: 2px solid #90ee90;
+        margin-bottom: 20px;
+      }
+
+      .evaluation-content {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 5px;
+        white-space: pre-wrap;
+        font-size: 14px;
+        line-height: 1.8;
+        border-left: 4px solid #ddd;
+        margin-bottom: 20px;
+      }
+
+      .comprehensive-conclusion {
+        background-color: #f9f9f9;
+        padding: 25px;
+        border-radius: 5px;
+        border-left: 4px solid #ddd;
+        margin-top: 30px;
+      }
+
+      .conclusion-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .conclusion-content {
+        white-space: pre-wrap;
+        font-size: 14px;
+        line-height: 1.8;
+        color: #000;
+      }
+
+      .cross-validation {
+        background-color: #f9f9f9;
+        padding: 25px;
+        border-radius: 5px;
+        border-left: 4px solid #ddd;
+        margin-top: 30px;
+      }
+
+      .validation-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .validation-content {
+        white-space: pre-wrap;
+        font-size: 14px;
+        line-height: 1.8;
+        color: #000;
+      }
+
+      .page-break {
+        page-break-before: always;
+      }
+
+      @media print {
+        body {
+          padding: 20px;
+        }
+
+        .page-break {
+          page-break-before: always;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 자율활동 섹션 -->
+    <div class='section'>
+      <h2 class='section-title'>자율활동</h2>
+
+      <h3 class='subsection-title'>요약</h3>
+      <div
+        class='content'
+      >{{creative_activity.autonomous_activity.summary}}</div>
+
+      <h3 class='subsection-title'>분석</h3>
+      <div
+        class='analysis-content'
+      >{{creative_activity.autonomous_activity.analysis}}</div>
+
+      <h3 class='subsection-title'>평가</h3>
+      <div
+        class='evaluation-content'
+      >{{creative_activity.autonomous_activity.evaluation}}</div>
+    </div>
+
+    <!-- 동아리활동 섹션 -->
+    <div class='section page-break'>
+      <h2 class='section-title'>동아리활동</h2>
+
+      <h3 class='subsection-title'>요약</h3>
+      <div class='content'>{{creative_activity.club_activity.summary}}</div>
+
+      <h3 class='subsection-title'>분석</h3>
+      <div
+        class='analysis-content'
+      >{{creative_activity.club_activity.analysis}}</div>
+
+      <h3 class='subsection-title'>평가</h3>
+      <div
+        class='evaluation-content'
+      >{{creative_activity.club_activity.evaluation}}</div>
+    </div>
+
+    <!-- 진로활동 섹션 -->
+    <div class='section page-break'>
+      <h2 class='section-title'>진로활동</h2>
+
+      <h3 class='subsection-title'>요약</h3>
+      <div class='content'>{{creative_activity.career_activity.summary}}</div>
+
+      <h3 class='subsection-title'>분석</h3>
+      <div
+        class='analysis-content'
+      >{{creative_activity.career_activity.analysis}}</div>
+
+      <h3 class='subsection-title'>평가</h3>
+      <div
+        class='evaluation-content'
+      >{{creative_activity.career_activity.evaluation}}</div>
+    </div>
+
+    <!-- 봉사활동 섹션 -->
+    <div class='section page-break'>
+      <h2 class='section-title'>봉사활동</h2>
+
+      <h3 class='subsection-title'>요약</h3>
+      <div
+        class='content'
+      >{{creative_activity.volunteer_activity.summary}}</div>
+
+      <h3 class='subsection-title'>분석</h3>
+      <div
+        class='analysis-content'
+      >{{creative_activity.volunteer_activity.analysis}}</div>
+
+      <h3 class='subsection-title'>평가</h3>
+      <div
+        class='evaluation-content'
+      >{{creative_activity.volunteer_activity.evaluation}}</div>
+    </div>
+
+    <!-- 종합 결론 섹션 -->
+    <div class='comprehensive-conclusion page-break'>
+      <h2 class='conclusion-title'>종합 결론</h2>
+      <div
+        class='conclusion-content'
+      >{{creative_activity.comprehensive_conclusion.conclusion}}</div>
+    </div>
+
+    <!-- 교차검증 평가 -->
+    {{#if cross_validation.evaluation}}
+      <div class='cross-validation page-break'>
+        <h2 class='validation-title'>교차검증 평가</h2>
+        <div class='validation-content'>{{cross_validation.evaluation}}</div>
+      </div>
+    {{/if}}
+  </body>
+</html>

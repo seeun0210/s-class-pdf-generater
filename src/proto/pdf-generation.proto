@@ -1,0 +1,60 @@
+// src/proto/pdf-generation.proto
+syntax = "proto3";
+
+package pdf.generation;
+
+option java_package = "com.sclass.sclassplatform.interview.grpc";
+option java_outer_classname = "PdfGenerationProto";
+
+service PdfGenerationService {
+  rpc GeneratePdf(PdfGenerationRequest) returns (PdfGenerationResponse);
+}
+
+message PdfGenerationRequest {
+  string session_id = 1;
+  string analysis_type = 2;
+  string template_name = 3;
+  AnalysisData analysis_data = 4;
+  PdfOptions options = 5;
+}
+
+message AnalysisData {
+  CreativeActivityData creative_activity = 1;
+}
+
+message CreativeActivityData {
+  ActivityData autonomous_activity = 1;
+  ActivityData club_activity = 2;
+  ActivityData career_activity = 3;
+  ActivityData volunteer_activity = 4;
+  ComprehensiveConclusion comprehensive_conclusion = 5;
+}
+
+message ActivityData {
+  string summary = 1;
+  string analysis = 2;
+  string evaluation = 3;
+}
+
+message ComprehensiveConclusion {
+  string conclusion = 1;
+}
+
+message CrossValidation {
+  repeated string strengths = 1;
+  repeated string weaknesses = 2;
+  repeated string recommendations = 3;
+}
+
+message PdfOptions {
+  string format = 1;
+  string orientation = 2;
+  map<string, string> margins = 3;
+}
+
+message PdfGenerationResponse {
+  bool success = 1;
+  string message = 2;
+  bytes pdf_data = 3;
+  string file_name = 4;
+}
