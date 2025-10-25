@@ -3,7 +3,7 @@ import { DataConverter } from './data-converter.interface';
 import {
   CreativeActivityAnalysisData,
   CreativeActivityTemplateData,
-} from './type';
+} from './types';
 
 @Injectable()
 export class CreativeActivityDataConverter
