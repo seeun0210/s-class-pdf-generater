@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { DataConverter } from './data-converter.interface';
 import { CreativeActivityDataConverter } from './creative-activity-data.converter';
+import { DetailedAbilitiesDataConverter } from './detailed-abilities.data.converter';
+import { MindMapDataConverter } from './mindmap-data.converter';
+import { OverallAnalysisDataConverter } from './overall-analysis-data.converter';
 
 @Injectable()
 export class DataConverterFactory {
@@ -8,9 +11,15 @@ export class DataConverterFactory {
 
   constructor(
     private readonly creativeActivityDataConverter: CreativeActivityDataConverter,
+    private readonly detailedAbilitiesDataConverter: DetailedAbilitiesDataConverter,
+    private readonly mindMapDataConverter: MindMapDataConverter,
+    private readonly overallAnalysisDataConverter: OverallAnalysisDataConverter,
   ) {
     this.converterRecord = {
       creative_activity: this.creativeActivityDataConverter,
+      detailed_abilities: this.detailedAbilitiesDataConverter,
+      mindmap: this.mindMapDataConverter,
+      overall_analysis: this.overallAnalysisDataConverter,
     };
   }
 

@@ -259,6 +259,67 @@ client.GeneratePdf(request, (error, response) => {
 });
 ```
 
+## 🧪 PDF 생성 테스트
+
+프로젝트에 포함된 테스트 스크립트를 사용하여 모든 타입의 PDF를 생성하고 확인할 수 있습니다.
+
+### 테스트 스크립트 종류
+
+#### 1. 직접 PDF 생성 (템플릿 테스트용)
+
+```bash
+npm run test:pdf
+```
+
+**설명**: Puppeteer를 직접 사용하여 템플릿을 렌더링하고 PDF를 생성합니다. gRPC 서버 없이 테스트할 수 있습니다.
+
+#### 2. gRPC 서버 테스트 (통합 테스트용)
+
+**먼저 서버 실행:**
+
+```bash
+npm run start:dev
+```
+
+**다른 터미널에서 테스트 실행:**
+
+```bash
+npm run test:grpc
+```
+
+**설명**: 실제 gRPC 서버에 요청을 보내서 PDF를 생성합니다. 전체 시스템을 테스트합니다.
+
+### 생성되는 PDF 파일
+
+스크립트 실행 시 `test-outputs/` 디렉토리에 다음 파일들이 생성됩니다:
+
+- `creative_activity_test_[timestamp].pdf` - 창의적 체험활동 분석
+- `detailed_abilities_test_[timestamp].pdf` - 세부능력특기사항 분석
+- `mindmap_test_[timestamp].pdf` - 탐구 과정 마인드맵 분석
+- `overall_test_[timestamp].pdf` - 종합 분석
+
+### 지원하는 분석 타입
+
+1. **creative_activity** (`create-activity-analysis.hbs`)
+   - 자율활동, 동아리활동, 진로활동, 봉사활동
+   - 종합 결론, 교차검증
+
+2. **detailed_abilities** (`detailed-abilities-analysis.hbs`)
+   - 과목별 분석 (세부능력특기사항, 평가 결과)
+   - 종합 결론 (강점, 보완점, 추천사항)
+
+3. **mindmap** (`mindmap-analysis.hbs`)
+   - 중앙 주제
+   - 메인 브랜치 및 서브 브랜치
+   - 연결 관계 및 연계성 평가
+   - 종합 분석 (통찰, 패턴)
+
+4. **overall** (`overall-analysis.hbs`)
+   - 학생 프로필 (성격 유형, 학습 스타일 등)
+   - 핵심 역량 및 성장 영역
+   - 추천사항
+   - 종합 결론
+
 ## 🐳 Docker 배포 (예시)
 
 ```dockerfile

@@ -14,7 +14,7 @@ message PdfGenerationRequest {
   string session_id = 1;
   string analysis_type = 2;
   string template_name = 3;
-  AnalysisData analysis_data = 4;
+  string analysis_data = 4;  // JSON string
   PdfOptions options = 5;
 }
 

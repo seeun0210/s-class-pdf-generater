@@ -53,6 +53,11 @@ export class PdfService {
 
       await page.setContent(html, { waitUntil: 'networkidle0' });
 
+      // 마인드맵 렌더링을 위한 추가 대기 (Canvas/JavaScript 실행)
+      if (templateName === 'mindmap-analysis') {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      }
+
       const pdfOptions = {
         format: (options as { format: PaperFormat })?.format || 'A4',
         printBackground: true,
@@ -106,6 +111,17 @@ export class PdfService {
       }
 
       const templateSource = fs.readFileSync(templatePath, 'utf8');
+
+      // JSON helper 등록
+      Handlebars.registerHelper('toJSON', function (context) {
+        return JSON.stringify(context);
+      });
+
+      // eq helper 등록 (같은지 비교)
+      Handlebars.registerHelper('eq', function (a, b) {
+        return a === b;
+      });
+
       const template = Handlebars.compile(templateSource);
 
       return template(data);

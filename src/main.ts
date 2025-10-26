@@ -10,7 +10,7 @@ async function bootstrap() {
     transport: Transport.GRPC,
     options: {
       package: 'pdf.generation',
-      protoPath: join(__dirname, 'proto/pdf-generation.proto'),
+      protoPath: join(process.cwd(), 'src', 'proto', 'pdf-generation.proto'),
       url: '0.0.0.0:9090',
     },
   });

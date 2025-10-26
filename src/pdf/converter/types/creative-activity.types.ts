@@ -1,31 +1,29 @@
 export type CreativeActivityAnalysisData = {
-  creativeActivity: {
-    autonomousActivity: {
-      summary?: string;
-      analysis?: string;
-      evaluation?: string;
-    };
-    clubActivity: {
-      summary?: string;
-      analysis?: string;
-      evaluation?: string;
-    };
-    careerActivity: {
-      summary?: string;
-      analysis?: string;
-      evaluation?: string;
-    };
-    volunteerActivity: {
-      summary?: string;
-      analysis?: string;
-      evaluation?: string;
-    };
-    comprehensiveConclusion: {
-      conclusion?: string;
-    };
-    crossValidation: {
-      evaluation?: string;
-    };
+  autonomousActivity: {
+    summary?: string;
+    analysis?: string;
+    evaluation?: string;
+  };
+  clubActivity: {
+    summary?: string;
+    analysis?: string;
+    evaluation?: string;
+  };
+  careerActivity: {
+    summary?: string;
+    analysis?: string;
+    evaluation?: string;
+  };
+  volunteerActivity: {
+    summary?: string;
+    analysis?: string;
+    evaluation?: string;
+  };
+  comprehensiveConclusion: {
+    conclusion?: string;
+  };
+  crossValidation: {
+    evaluation?: string;
   };
 };
 

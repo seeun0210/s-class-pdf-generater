@@ -14,34 +14,31 @@ export class CreativeActivityDataConverter
     return {
       creative_activity: {
         autonomous_activity: {
-          summary: data.creativeActivity?.autonomousActivity?.summary || '',
-          analysis: data.creativeActivity?.autonomousActivity?.analysis || '',
-          evaluation:
-            data.creativeActivity?.autonomousActivity?.evaluation || '',
+          summary: data.autonomousActivity?.summary || '',
+          analysis: data.autonomousActivity?.analysis || '',
+          evaluation: data.autonomousActivity?.evaluation || '',
         },
         club_activity: {
-          summary: data.creativeActivity?.clubActivity?.summary || '',
-          analysis: data.creativeActivity?.clubActivity?.analysis || '',
-          evaluation: data.creativeActivity?.clubActivity?.evaluation || '',
+          summary: data.clubActivity?.summary || '',
+          analysis: data.clubActivity?.analysis || '',
+          evaluation: data.clubActivity?.evaluation || '',
         },
         career_activity: {
-          summary: data.creativeActivity?.careerActivity?.summary || '',
-          analysis: data.creativeActivity?.careerActivity?.analysis || '',
-          evaluation: data.creativeActivity?.careerActivity?.evaluation || '',
+          summary: data.careerActivity?.summary || '',
+          analysis: data.careerActivity?.analysis || '',
+          evaluation: data.careerActivity?.evaluation || '',
         },
         volunteer_activity: {
-          summary: data.creativeActivity?.volunteerActivity?.summary || '',
-          analysis: data.creativeActivity?.volunteerActivity?.analysis || '',
-          evaluation:
-            data.creativeActivity?.volunteerActivity?.evaluation || '',
+          summary: data.volunteerActivity?.summary || '',
+          analysis: data.volunteerActivity?.analysis || '',
+          evaluation: data.volunteerActivity?.evaluation || '',
         },
         comprehensive_conclusion: {
-          conclusion:
-            data.creativeActivity?.comprehensiveConclusion?.conclusion || '',
+          conclusion: data.comprehensiveConclusion?.conclusion || '',
         },
       },
       cross_validation: {
-        evaluation: data.creativeActivity?.crossValidation?.evaluation || '',
+        evaluation: data.crossValidation?.evaluation || '',
       },
       generatedAt: new Date().toLocaleString('ko-KR'),
     };
