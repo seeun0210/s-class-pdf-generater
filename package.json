@@ -18,6 +18,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:pdf": "ts-node -r tsconfig-paths/register scripts/generate-test-pdfs.ts",
+    "test:grpc": "ts-node -r tsconfig-paths/register scripts/test-grpc-pdf.ts",
     "proto:gen": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=src --ts_proto_opt=nestJs=true --proto_path=src/proto src/proto/*.proto"
   },
   "dependencies": {
