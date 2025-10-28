@@ -37,9 +37,6 @@ export class CreativeActivityDataConverter
           conclusion: data.comprehensiveConclusion?.conclusion || '',
         },
       },
-      cross_validation: {
-        evaluation: data.crossValidation?.evaluation || '',
-      },
       generatedAt: new Date().toLocaleString('ko-KR'),
     };
   }

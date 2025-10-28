@@ -1,29 +1,26 @@
 export type CreativeActivityAnalysisData = {
-  autonomousActivity: {
+  autonomousActivity?: {
     summary?: string;
     analysis?: string;
     evaluation?: string;
   };
-  clubActivity: {
+  clubActivity?: {
     summary?: string;
     analysis?: string;
     evaluation?: string;
   };
-  careerActivity: {
+  careerActivity?: {
     summary?: string;
     analysis?: string;
     evaluation?: string;
   };
-  volunteerActivity: {
+  volunteerActivity?: {
     summary?: string;
     analysis?: string;
     evaluation?: string;
   };
-  comprehensiveConclusion: {
+  comprehensiveConclusion?: {
     conclusion?: string;
-  };
-  crossValidation: {
-    evaluation?: string;
   };
 };
 
@@ -52,9 +49,6 @@ export type CreativeActivityTemplateData = {
     comprehensive_conclusion: {
       conclusion: string;
     };
-  };
-  cross_validation: {
-    evaluation: string;
   };
   generatedAt: string;
 };

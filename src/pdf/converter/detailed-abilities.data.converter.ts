@@ -12,20 +12,13 @@ export class DetailedAbilitiesDataConverter
 {
   convert(data: DetailedAbilitiesAnalysisData): DetailedAbilitiesTemplateData {
     return {
-      subject_analyses:
-        data.subjectAnalyses?.map((subject) => ({
-          subject_name: subject.subjectName || '',
-          summary: subject.summary || '',
-          analysis: subject.analysis || '',
-          evaluation: subject.evaluation || '',
-          key_points: subject.keyPoints || [],
+      evaluations:
+        data.evaluations?.map((evalData) => ({
+          subject: evalData.subject || '',
+          status: evalData.status || '',
+          evidence: evalData.evidence || '',
+          assessment: evalData.assessment || '',
         })) || [],
-      comprehensive_conclusion: {
-        conclusion: data.comprehensiveConclusion?.conclusion || '',
-        strengths: data.comprehensiveConclusion?.strengths || [],
-        weaknesses: data.comprehensiveConclusion?.weaknesses || [],
-        recommendations: data.comprehensiveConclusion?.recommendations || [],
-      },
       generatedAt: new Date().toLocaleString('ko-KR'),
     };
   }

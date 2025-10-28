@@ -1,66 +1,70 @@
 export type MindMapAnalysisData = {
-  centralTheme: {
-    theme?: string;
-    description?: string;
-    color?: string;
-  };
-  mainBranches: Array<{
-    id?: string;
+  careerPath?: string;
+  allActivities?: Array<{
+    id?: number;
     name?: string;
+    group?: string;
+    grade?: string;
     description?: string;
-    color?: string;
-    priority?: number;
   }>;
-  subBranches: Array<{
-    id?: string;
-    parentId?: string;
-    name?: string;
-    description?: string;
-    color?: string;
+  coreActivityIds?: number[];
+  links?: Array<{
+    source?: number;
+    target?: number;
   }>;
-  connections: Array<{
-    fromId?: string;
-    toId?: string;
-    relationship?: string;
-    strength?: number;
-  }>;
-  comprehensiveConclusion: {
+  summary?: {
+    title?: string;
+    introduction?: string;
+    keywords?: string;
+    strengths?: string;
     conclusion?: string;
-    insights?: string[];
-    patterns?: string[];
+  };
+  inDepthAnalysis?: {
+    connectivity?: {
+      introduction?: string;
+      horizontal?: string;
+      vertical?: string;
+    };
+    deepening?: {
+      introduction?: string;
+      deepening?: string;
+      expansion?: string;
+    };
   };
 };
 
 export type MindMapTemplateData = {
-  central_theme: {
-    theme: string;
-    description: string;
-    color: string;
-  };
-  main_branches: Array<{
-    id: string;
+  career_path: string;
+  all_activities: Array<{
+    id: number;
     name: string;
+    group: string;
+    grade: string;
     description: string;
-    color: string;
-    priority: number;
   }>;
-  sub_branches: Array<{
-    id: string;
-    parent_id: string;
-    name: string;
-    description: string;
-    color: string;
+  core_activity_ids: number[];
+  links: Array<{
+    source: number;
+    target: number;
   }>;
-  connections: Array<{
-    from_id: string;
-    to_id: string;
-    relationship: string;
-    strength: number;
-  }>;
-  comprehensive_conclusion: {
+  summary: {
+    title: string;
+    introduction: string;
+    keywords: string;
+    strengths: string;
     conclusion: string;
-    insights: string[];
-    patterns: string[];
+  };
+  in_depth_analysis: {
+    connectivity: {
+      introduction: string;
+      horizontal: string;
+      vertical: string;
+    };
+    deepening: {
+      introduction: string;
+      deepening: string;
+      expansion: string;
+    };
   };
   generatedAt: string;
 };

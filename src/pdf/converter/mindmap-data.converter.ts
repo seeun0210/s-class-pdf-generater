@@ -8,38 +8,39 @@ export class MindMapDataConverter
 {
   convert(data: MindMapAnalysisData): MindMapTemplateData {
     return {
-      central_theme: {
-        theme: data.centralTheme?.theme || '',
-        description: data.centralTheme?.description || '',
-        color: data.centralTheme?.color || '',
+      career_path: data.careerPath || '',
+      all_activities:
+        data.allActivities?.map((activity) => ({
+          id: activity.id || 0,
+          name: activity.name || '',
+          group: activity.group || '',
+          grade: activity.grade || '',
+          description: activity.description || '',
+        })) || [],
+      core_activity_ids: data.coreActivityIds || [],
+      links:
+        data.links?.map((link) => ({
+          source: link.source || 0,
+          target: link.target || 0,
+        })) || [],
+      summary: {
+        title: data.summary?.title || '',
+        introduction: data.summary?.introduction || '',
+        keywords: data.summary?.keywords || '',
+        strengths: data.summary?.strengths || '',
+        conclusion: data.summary?.conclusion || '',
       },
-      main_branches:
-        data.mainBranches?.map((branch) => ({
-          id: branch.id || '',
-          name: branch.name || '',
-          description: branch.description || '',
-          color: branch.color || '',
-          priority: branch.priority || 0,
-        })) || [],
-      sub_branches:
-        data.subBranches?.map((branch) => ({
-          id: branch.id || '',
-          parent_id: branch.parentId || '',
-          name: branch.name || '',
-          description: branch.description || '',
-          color: branch.color || '',
-        })) || [],
-      connections:
-        data.connections?.map((connection) => ({
-          from_id: connection.fromId || '',
-          to_id: connection.toId || '',
-          relationship: connection.relationship || '',
-          strength: connection.strength || 0,
-        })) || [],
-      comprehensive_conclusion: {
-        conclusion: data.comprehensiveConclusion?.conclusion || '',
-        insights: data.comprehensiveConclusion?.insights || [],
-        patterns: data.comprehensiveConclusion?.patterns || [],
+      in_depth_analysis: {
+        connectivity: {
+          introduction: data.inDepthAnalysis?.connectivity?.introduction || '',
+          horizontal: data.inDepthAnalysis?.connectivity?.horizontal || '',
+          vertical: data.inDepthAnalysis?.connectivity?.vertical || '',
+        },
+        deepening: {
+          introduction: data.inDepthAnalysis?.deepening?.introduction || '',
+          deepening: data.inDepthAnalysis?.deepening?.deepening || '',
+          expansion: data.inDepthAnalysis?.deepening?.expansion || '',
+        },
       },
       generatedAt: new Date().toLocaleString('ko-KR'),
     };

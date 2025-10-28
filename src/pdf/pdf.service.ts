@@ -40,9 +40,31 @@ export class PdfService {
     try {
       const page = await browser.newPage();
 
+      // analysisData가 문자열이면 JSON으로 파싱
+      let parsedAnalysisData = analysisData;
+
+      if (!analysisData) {
+        this.logger.warn(
+          'analysisData is null or undefined, using empty object',
+        );
+        parsedAnalysisData = {};
+      }
+
+      if (typeof analysisData === 'string') {
+        try {
+          parsedAnalysisData = JSON.parse(analysisData);
+        } catch (error) {
+          // JSON 파싱 실패 시 그대로 사용
+          this.logger.warn(
+            `Failed to parse analysisData as JSON, using as-is: ${error}`,
+          );
+          parsedAnalysisData = analysisData;
+        }
+      }
+
       //데이터 변환기 팩토리를 사용하여 데이터 반환
       const templateData = this.dataConverterFactory.convert({
-        analysisData,
+        analysisData: parsedAnalysisData,
         analysisType,
       });
 
@@ -54,8 +76,8 @@ export class PdfService {
       await page.setContent(html, { waitUntil: 'networkidle0' });
 
       // 마인드맵 렌더링을 위한 추가 대기 (Canvas/JavaScript 실행)
-      if (templateName === 'mindmap-analysis') {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+      if (templateName === 'mindMap' || templateName === 'mindmap-analysis') {
+        await new Promise((resolve) => setTimeout(resolve, 3000));
       }
 
       const pdfOptions = {

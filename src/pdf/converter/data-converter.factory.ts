@@ -15,19 +15,34 @@ export class DataConverterFactory {
     private readonly mindMapDataConverter: MindMapDataConverter,
     private readonly overallAnalysisDataConverter: OverallAnalysisDataConverter,
   ) {
+    // snake_case와 camelCase 둘 다 지원
     this.converterRecord = {
-      creative_activity: this.creativeActivityDataConverter,
-      detailed_abilities: this.detailedAbilitiesDataConverter,
-      mindmap: this.mindMapDataConverter,
-      overall_analysis: this.overallAnalysisDataConverter,
+      overall: this.overallAnalysisDataConverter,
+      creativeActivity: this.creativeActivityDataConverter,
+      detailedAbilities: this.detailedAbilitiesDataConverter,
+      mindMap: this.mindMapDataConverter,
     };
   }
 
   getConverter({ analysisType }: { analysisType: string }): DataConverter {
-    const converter = this.converterRecord[analysisType];
+    // camelCase를 snake_case로 변환
+    const normalizedType = analysisType
+      .replace(/([A-Z])/g, '_$1')
+      .toLowerCase();
+
+    // 먼저 원본 키로 확인
+    let converter = this.converterRecord[analysisType];
+
+    // 없으면 snake_case 변환된 키로 확인
+    if (!converter) {
+      converter = this.converterRecord[normalizedType];
+    }
+
+    // 그래도 없으면 에러
     if (!converter) {
       throw new Error(`Converter for ${analysisType} not found`);
     }
+
     return converter;
   }
 
