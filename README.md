@@ -1,6 +1,6 @@
 # S-Class PDF Converter
 
-창의적 체험활동 분석 보고서를 PDF로 변환하는 gRPC 마이크로서비스입니다.
+학생부 분석 보고서를 PDF로 변환하는 gRPC 마이크로서비스입니다. 창의적 체험활동, 세부능력특기사항, 탐구 과정 마인드맵, 종합 분석을 지원합니다.
 
 ## ☁️ Cloud Run 배포 가이드 & 주의사항
 
@@ -135,13 +135,22 @@ graph TB
 ### 4. 데이터 변환 레이어
 
 - **팩토리**: `src/pdf/converter/data-converter.factory.ts`
-- **컨버터**: `src/pdf/converter/creative-activity-data.converter.ts`
-- **역할**: 분석 데이터를 템플릿 데이터로 변환
+- **컨버터들**:
+  - `creative-activity-data.converter.ts` - 창의적 체험활동 분석
+  - `detailed-abilities.data.converter.ts` - 세부능력특기사항 분석
+  - `mindmap-data.converter.ts` - 탐구 과정 마인드맵 분석
+  - `overall-analysis-data.converter.ts` - 종합 분석
+- **역할**: Java DTO (camelCase) → Handlebars 템플릿 데이터 (snake_case) 변환
 
 ### 5. 템플릿 레이어
 
-- **파일**: `src/templates/create-activity-analysis.hbs`
+- **템플릿 파일들**:
+  - `create-activity-analysis.hbs` - 창의적 체험활동
+  - `detailed-abilities-analysis.hbs` - 세부능력특기사항
+  - `mindmap-analysis.hbs` - 탐구 과정 마인드맵 (SVG 그래프 포함)
+  - `overall-analysis.hbs` - 종합 분석
 - **엔진**: Handlebars
+- **Helper Functions**: `toJSON`, `eq`
 - **스타일**: CSS (Noto Sans KR 폰트)
 
 ## 🔧 기술 스택
@@ -232,12 +241,30 @@ service PdfGenerationService {
 ```protobuf
 message PdfGenerationRequest {
   string session_id = 1;
-  string analysis_type = 2;
-  string template_name = 3;
-  AnalysisData analysis_data = 4;
+  string analysis_type = 2;         # "creative_activity", "detailed_abilities", "mindmap", "overall_analysis"
+  string template_name = 3;          # "create-activity-analysis", "detailed-abilities-analysis", "mindmap-analysis", "overall-analysis"
+  string analysis_data = 4;          # JSON string
   PdfOptions options = 5;
 }
 ```
+
+### 지원하는 분석 타입
+
+- **creative_activity** (창의적 체험활동)
+  - 템플릿: `create-activity-analysis`
+  - 자율활동, 동아리활동, 진로활동, 봉사활동 분석
+
+- **detailed_abilities** (세부능력특기사항)
+  - 템플릿: `detailed-abilities-analysis`
+  - 과목별 능력 분석 및 종합 평가
+
+- **mindmap** (탐구 과정 마인드맵)
+  - 템플릿: `mindmap-analysis`
+  - 중앙 주제와 메인/서브 브랜치 그래프 시각화
+
+- **overall_analysis** (종합 분석)
+  - 템플릿: `overall-analysis`
+  - 학생 프로필, 핵심 역량, 성장 영역 분석
 
 ### 응답 메시지
 
@@ -255,23 +282,34 @@ message PdfGenerationResponse {
 ```
 src/
 ├── proto/
-│   └── pdf-generation.proto          # gRPC 서비스 정의
+│   └── pdf-generation.proto              # gRPC 서비스 정의
 ├── pdf/
-│   ├── pdf-grpc.controller.ts       # gRPC 컨트롤러
-│   ├── pdf.service.ts               # PDF 생성 서비스
-│   ├── pdf.module.ts                # PDF 모듈
+│   ├── pdf-grpc.controller.ts           # gRPC 컨트롤러
+│   ├── pdf.service.ts                   # PDF 생성 서비스
+│   ├── pdf.module.ts                    # PDF 모듈
 │   └── converter/
-│       ├── data-converter.factory.ts
+│       ├── data-converter.factory.ts    # 컨버터 팩토리
 │       ├── creative-activity-data.converter.ts
-│       └── type/
-│           ├── common.types.ts
-│           └── creative-activity.types.ts
+│       ├── detailed-abilities.data.converter.ts
+│       ├── mindmap-data.converter.ts
+│       ├── overall-analysis-data.converter.ts
+│       └── types/
+│           ├── index.ts                 # 타입 export
+│           ├── common.types.ts         # 공통 타입
+│           ├── creative-activity.types.ts
+│           ├── detailed-abilities.types.ts
+│           ├── mindmap.types.ts
+│           └── overall.types.ts
 ├── templates/
-│   └── create-activity-analysis.hbs # PDF 템플릿
+│   ├── create-activity-analysis.hbs    # 창의적 체험활동
+│   ├── detailed-abilities-analysis.hbs  # 세부능력특기사항
+│   ├── mindmap-analysis.hbs            # 탐구 과정 마인드맵
+│   └── overall-analysis.hbs            # 종합 분석
 ├── config/
-│   └── configuration.ts             # 설정 관리
-├── app.module.ts                    # 애플리케이션 모듈
-└── main.ts                          # 애플리케이션 진입점
+│   ├── configuration.ts                 # 설정 관리
+│   └── configuration.module.ts
+├── app.module.ts                        # 애플리케이션 모듈
+└── main.ts                              # 애플리케이션 진입점
 ```
 
 ## 🔧 설정
@@ -307,24 +345,35 @@ const client = new pdfGenerationProto.PdfGenerationService(
   grpc.credentials.createInsecure(),
 );
 
-// PDF 생성 요청
+// PDF 생성 요청 (창의적 체험활동 분석)
 const request = {
-  session_id: 'test-session',
+  session_id: 'test-session-123',
   analysis_type: 'creative_activity',
   template_name: 'create-activity-analysis',
-  analysis_data: {
-    creative_activity: {
-      autonomous_activity: {
-        summary: '자율활동 요약',
-        analysis: '자율활동 분석',
-        evaluation: '자율활동 평가',
-      },
-      // ... 기타 활동 데이터
+  analysis_data: JSON.stringify({
+    autonomousActivity: {
+      summary: '자율활동 요약',
+      analysis: '자율활동 분석',
+      evaluation: '자율활동 평가',
     },
-  },
+    clubActivity: {
+      /* ... */
+    },
+    careerActivity: {
+      /* ... */
+    },
+    volunteerActivity: {
+      /* ... */
+    },
+    comprehensiveConclusion: {
+      /* ... */
+    },
+    crossValidation: {
+      /* ... */
+    },
+  }),
   options: {
     format: 'A4',
-    orientation: 'portrait',
   },
 };
 
@@ -335,8 +384,83 @@ client.GeneratePdf(request, (error, response) => {
   }
 
   console.log('PDF 생성 성공:', response.success);
+  console.log('파일명:', response.file_name);
   console.log('파일 크기:', response.pdf_data.length, 'bytes');
 });
+```
+
+### 다른 분석 타입 요청 예시
+
+#### 세부능력특기사항 분석
+
+```javascript
+const request = {
+  session_id: 'test-session-124',
+  analysis_type: 'detailed_abilities',
+  template_name: 'detailed-abilities-analysis',
+  analysis_data: JSON.stringify({
+    subjectAnalyses: [
+      {
+        subjectName: '국어',
+        summary: '과목 요약',
+        analysis: '과목 분석',
+        evaluation: '과목 평가',
+        keyPoints: ['핵심 내용 1', '핵심 내용 2'],
+      },
+    ],
+    comprehensiveConclusion: {
+      /* ... */
+    },
+  }),
+  options: { format: 'A4' },
+};
+```
+
+#### 탐구 과정 마인드맵
+
+```javascript
+const request = {
+  session_id: 'test-session-125',
+  analysis_type: 'mindmap',
+  template_name: 'mindmap-analysis',
+  analysis_data: JSON.stringify({
+    centralTheme: { theme: '중앙 주제', color: '#667eea' },
+    mainBranches: [{ name: '주요 항목', color: '#ff6b6b', priority: 1 }],
+    subBranches: [
+      /* ... */
+    ],
+    connections: [
+      /* ... */
+    ],
+  }),
+  options: { format: 'A4' },
+};
+```
+
+#### 종합 분석
+
+```javascript
+const request = {
+  session_id: 'test-session-126',
+  analysis_type: 'overall_analysis',
+  template_name: 'overall-analysis',
+  analysis_data: JSON.stringify({
+    studentProfile: {
+      personalityType: '탐구형',
+      learningStyle: '주도적 학습',
+    },
+    coreCompetencies: [
+      /* ... */
+    ],
+    growthAreas: [
+      /* ... */
+    ],
+    recommendations: [
+      /* ... */
+    ],
+  }),
+  options: { format: 'A4' },
+};
 ```
 
 ## 🐳 Docker 배포 (예시)
@@ -411,6 +535,41 @@ CMD ["node", "dist/main.js"]
    - proto 파일 경로 확인
    - 패키지 이름 일치 확인 (`pdf.generation`)
 
+## ✨ 주요 기능
+
+### 데이터 변환 자동화
+
+Java 서버에서 전달된 camelCase 구조의 데이터를 Handlebars 템플릿이 사용하는 snake_case 형태로 자동 변환합니다.
+
+```typescript
+// Java DTO (입력)
+{
+  autonomousActivity: {
+    summary: '...';
+  }
+}
+
+// 템플릿 데이터 (출력)
+{
+  autonomous_activity: {
+    summary: '...';
+  }
+}
+```
+
+### 시각적 마인드맵 생성
+
+탐구 과정 마인드맵은 SVG를 사용하여 중앙 주제와 연결된 브랜치를 그래프 형태로 시각화합니다.
+
+### Handlebars Helper
+
+- `toJSON`: 객체를 JSON 문자열로 변환
+- `eq`: 값 비교를 위한 헬퍼
+
+### 다중 분석 타입 지원
+
+4가지 분석 타입에 대해 각각의 템플릿과 데이터 컨버터를 제공합니다.
+
 ## 📈 성능 최적화
 
 ### 권장사항
@@ -419,6 +578,7 @@ CMD ["node", "dist/main.js"]
 - **템플릿 캐싱**: Handlebars 템플릿 컴파일 결과 캐싱
 - **메모리 관리**: PDF 버퍼 즉시 해제
 - **병렬 처리**: 여러 PDF 동시 생성
+- **마인드맵 렌더링**: Canvas 렌더링을 위해 추가 대기 시간 제공
 
 ## 🔒 보안 고려사항
 
