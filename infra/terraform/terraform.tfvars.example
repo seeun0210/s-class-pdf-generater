@@ -1,0 +1,11 @@
+project_id = "your-gcp-project-id"
+region     = "asia-northeast3"
+service_name = "s-class-pdf"
+image = "asia-northeast3-docker.pkg.dev/your-gcp-project-id/s-class-pdf-repo/s-class-pdf:latest"
+allow_unauthenticated = false
+cpu = 2
+memory = "1Gi"
+concurrency = 10
+timeout_seconds = 300
+artifact_repo_location = "asia-northeast3"
+artifact_repo_name = "s-class-pdf-repo"
