@@ -119,10 +119,10 @@ export class PdfService {
     data: unknown;
   }): string {
     try {
-      // 상대 경로로 템플릿 파일 경로 설정
+      // dist 기준 템플릿 경로 사용 (nest-cli assets로 dist/templates에 복사됨)
       const templatePath = path.resolve(
-        process.cwd(),
-        'src',
+        __dirname,
+        '..',
         'templates',
         `${templateName}.hbs`,
       );

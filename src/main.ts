@@ -4,17 +4,24 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  try {
+    const app = await NestFactory.create(AppModule);
+    const port = process.env.PORT || '8080';
 
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.GRPC,
-    options: {
-      package: 'pdf.generation',
-      protoPath: join(process.cwd(), 'src', 'proto', 'pdf-generation.proto'),
-      url: '0.0.0.0:9090',
-    },
-  });
-  await app.startAllMicroservices();
-  await app.listen(process.env.PORT ?? 3000);
+    app.connectMicroservice<MicroserviceOptions>({
+      transport: Transport.GRPC,
+      options: {
+        package: 'pdf.generation',
+        protoPath: join(__dirname, 'proto', 'pdf-generation.proto'),
+        url: `0.0.0.0:${port}`,
+      },
+    });
+    await app.startAllMicroservices();
+    console.log(`gRPC server is listening on port ${port}`);
+    // HTTP 서버는 시작하지 않음 (마이크로서비스만 사용)
+  } catch (error) {
+    console.error('Failed to start application:', error);
+    process.exit(1);
+  }
 }
 void bootstrap();

@@ -2,6 +2,86 @@
 
 학생부 분석 보고서를 PDF로 변환하는 gRPC 마이크로서비스입니다. 창의적 체험활동, 세부능력특기사항, 탐구 과정 마인드맵, 종합 분석을 지원합니다.
 
+## ☁️ Cloud Run 배포 가이드 & 주의사항
+
+### 필수 체크리스트
+
+- **이미지 아키텍처**: Cloud Run은 linux/amd64 권장 → `docker buildx build --platform linux/amd64 ... --push`
+- **Chromium 포함**: 런타임에 브라우저 설치 필요. Dockerfile은 Debian slim 기반으로 `chromium`과 `fonts-noto-cjk` 설치.
+- **Puppeteer 실행 옵션**: `PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium`, `--no-sandbox --disable-setuid-sandbox --disable-dev-shm-usage` 사용.
+- **gRPC Proto 경로**: 빌드 산출물 기준으로 읽음 → `protoPath = join(__dirname, 'proto', 'pdf-generation.proto')`.
+- **템플릿 자산 포함**: `nest-cli.json`에 `assets: ['proto/**/*', 'templates/**/*']` 설정. 서비스는 `__dirname/../templates`에서 로드.
+- **@grpc/proto-loader 의존성**: 반드시 runtime dependencies에 포함(`dependencies`). lockfile 갱신 필요: `pnpm install`.
+- **Terraform 이미지 태그**: `infra/terraform/terraform.tfvars`의 `image`를 항상 새 태그로 업데이트하여 새 리비전 트리거.
+- **State Lock**: 로컬 backend 사용 시 동시 `apply` 금지. 필요 시 프로세스 종료 후 `terraform.tfstate.lock.info` 삭제.
+
+### Docker 빌드/푸시 (예시)
+
+```bash
+pnpm install && pnpm build
+docker buildx create --name cross --use || true
+docker buildx inspect --bootstrap
+docker buildx build --platform linux/amd64 \
+  -t asia-northeast3-docker.pkg.dev/<PROJECT>/<REPO>/s-class-pdf:<TAG> \
+  -f Dockerfile . --push
+```
+
+### Terraform 배포 (예시)
+
+```bash
+cd infra/terraform
+# terraform.tfvars 의 image 값을 새 태그로 교체
+terraform apply -auto-approve
+```
+
+### grpcurl 테스트 (Cloud Run, 인증 필요)
+
+```bash
+# (권장) 서비스 계정 가장(impersonation)으로 ID 토큰 발급
+gcloud iam service-accounts add-iam-policy-binding \
+  sclass-invoker@<PROJECT>.iam.gserviceaccount.com \
+  --member="user:<YOUR_USER>@gmail.com" \
+  --role="roles/iam.serviceAccountTokenCreator"
+
+TOKEN=$(gcloud auth print-identity-token \
+  --impersonate-service-account=sclass-invoker@<PROJECT>.iam.gserviceaccount.com \
+  --audiences=https://<SERVICE_HOST>.a.run.app)
+
+grpcurl \
+  -d '{
+    "session_id":"string",
+    "analysis_type":"creativeActivity",
+    "template_name":"creativeActivity",
+    "analysis_data_json":"{}",
+    "options":{"format":"A4","orientation":"portrait","margins":{"top":"20mm","bottom":"20mm","left":"20mm","right":"20mm"}}
+  }' \
+  -import-path src/proto \
+  -proto pdf-generation.proto \
+  -authority <SERVICE_HOST>.a.run.app \
+  -H "Authorization: Bearer $TOKEN" \
+  <SERVICE_HOST>.a.run.app:443 \
+  pdf.generation.PdfGenerationService/GeneratePdf
+```
+
+### Spring(Java) 클라이언트 연결 팁
+
+- 채널: `host = <SERVICE_HOST>.a.run.app`, `port = 443`, `useTransportSecurity()`
+- 인증: Google ADC로 `IdTokenCredentials(targetAudience = https://<SERVICE_HOST>.a.run.app)` 생성 후 `MoreCallCredentials.from(...)`를 stub에 부착
+- 네트워크: IPv6 문제 시 JVM 옵션 `-Djava.net.preferIPv4Stack=true`
+- gRPC 버전 정합: `grpc-netty-shaded`, `grpc-protobuf`, `grpc-stub` 버전 통일
+
+### 트러블슈팅 핵심
+
+- "exec format error": amd64로 재빌드
+- "Image not found": Artifact Registry에 푸시 여부/태그 확인
+- "@grpc/proto-loader missing": runtime dependencies로 이동 + lockfile 갱신 후 재빌드
+- "Template file not found":
+  - 로그에 `/app/src/templates/...`가 보이면 오래된 리비전 → 새 이미지/태그로 재배포
+  - `nest-cli.json` assets와 `pdf.service.ts` 경로(`__dirname/../templates`) 확인
+- Cloud Run Ready=False & PORT:8080 리슨 실패:
+  - `startup_probe` TCP 8080 확인, 초기 부팅 지연 시 `failure_threshold/period/timeout` 상향
+
+````
 ## 🏗️ 아키텍처 개요
 
 ```mermaid
@@ -26,7 +106,7 @@ graph TB
         Template
         Browser
     end
-```
+````
 
 ## 📋 주요 구성 요소
 
@@ -242,7 +322,7 @@ src/
 ### 템플릿 경로
 
 - **개발**: `src/templates/`
-- **프로덕션**: `process.cwd()/src/templates/`
+- **프로덕션**: `dist/templates/` (Nest assets 복사, 코드에선 `__dirname/../templates` 사용)
 
 ## 📝 사용 예시
 

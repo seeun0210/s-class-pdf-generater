@@ -11,6 +11,9 @@ importers:
       '@grpc/grpc-js':
         specifier: ^1.14.0
         version: 1.14.0
+      '@grpc/proto-loader':
+        specifier: ^0.8.0
+        version: 0.8.0
       '@nestjs/common':
         specifier: ^11.0.1
         version: 11.1.7(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -54,9 +57,6 @@ importers:
       '@eslint/js':
         specifier: ^9.18.0
         version: 9.38.0
-      '@grpc/proto-loader':
-        specifier: ^0.8.0
-        version: 0.8.0
       '@nestjs/cli':
         specifier: ^11.0.0
         version: 11.0.10(@swc/cli@0.6.0(@swc/core@1.13.21)(chokidar@4.0.3))(@swc/core@1.13.21)(@types/node@22.18.12)

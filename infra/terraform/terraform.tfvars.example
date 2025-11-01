@@ -1,0 +1,28 @@
+project_id = "your-gcp-project-id"
+region     = "asia-northeast3"
+service_name = "s-class-pdf"
+image = "asia-northeast3-docker.pkg.dev/your-gcp-project-id/s-class-pdf-repo/s-class-pdf:latest"
+allow_unauthenticated = false
+cpu = 2
+memory = "1Gi"
+concurrency = 10
+timeout_seconds = 300
+artifact_repo_location = "asia-northeast3"
+artifact_repo_name = "s-class-pdf-repo"
+
+# VPC 네트워크 설정
+app_name = "s-class-pdf"
+environment = "prod"
+resource_suffix = ""  # 선택사항: 리소스 이름에 추가할 접미사
+subnet_cidr = "10.0.1.0/24"
+enable_vpc = true
+
+# CodeRunner 서비스 설정
+coderunner_image = "asia-northeast3-docker.pkg.dev/your-gcp-project-id/s-class-pdf-repo/coderunner:latest"
+
+# 허용된 프로젝트 목록 (CodeRunner 접근 허용)
+allowed_source_projects = ["s-class-platform", "s-class-platform-dev"]
+
+# 허용된 소스 CIDR 범위 (VPC Peering 사용 시 해당 프로젝트의 서브넷 CIDR 지정)
+# 예: ["10.1.0.0/24", "10.2.0.0/24"]
+allowed_source_ranges = []

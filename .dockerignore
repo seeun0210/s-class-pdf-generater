@@ -1,0 +1,7 @@
+node_modules
+.git
+infra
+test
+.terraform
+terraform.tsstate*
+pnpm-workspace.yaml
