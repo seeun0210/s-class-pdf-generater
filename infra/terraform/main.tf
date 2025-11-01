@@ -255,10 +255,10 @@ resource "google_cloud_run_v2_service" "coderunner" {
 
       startup_probe {
         tcp_socket { port = 8080 }
-        failure_threshold     = 6
-        period_seconds        = 30
-        timeout_seconds       = 30
-        initial_delay_seconds = 0
+        failure_threshold     = 10  # 더 많은 시도 허용
+        period_seconds        = 10  # 더 자주 체크
+        timeout_seconds       = 10
+        initial_delay_seconds = 10  # 초기 지연 추가 (컨테이너 시작 시간 확보)
       }
 
       resources {
@@ -367,10 +367,10 @@ resource "google_cloud_run_v2_service" "coderunner_legacy" {
 
       startup_probe {
         tcp_socket { port = 8080 }
-        failure_threshold     = 6
-        period_seconds        = 30
-        timeout_seconds       = 30
-        initial_delay_seconds = 0
+        failure_threshold     = 10  # 더 많은 시도 허용
+        period_seconds        = 10  # 더 자주 체크
+        timeout_seconds       = 10
+        initial_delay_seconds = 10  # 초기 지연 추가 (컨테이너 시작 시간 확보)
       }
 
       resources {
