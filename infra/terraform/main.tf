@@ -72,6 +72,7 @@ resource "google_cloud_run_v2_service" "service" {
         name  = "NODE_ENV"
         value = "production"
       }
+      # PORT는 Cloud Run이 자동으로 설정하므로 제거
     }
   }
 
@@ -278,6 +279,7 @@ resource "google_cloud_run_v2_service" "coderunner" {
         name  = "NODE_ENV"
         value = "production"
       }
+      # PORT는 Cloud Run이 자동으로 설정하므로 제거
     }
   }
 
@@ -314,8 +316,10 @@ resource "google_compute_firewall" "coderunner_internal" {
 }
 
 # 허용된 프로젝트의 서비스 계정에 CodeRunner 접근 권한 부여
+# 주의: 다른 프로젝트의 서비스 계정은 직접 참조할 수 없으므로 수동 설정 필요
+# manage_iam_policies가 false이면 Terraform에서 관리하지 않음
 resource "google_cloud_run_v2_service_iam_member" "coderunner_invoker" {
-  for_each = {
+  for_each = var.manage_iam_policies ? {
     for combo in flatten([
       for v in var.coderunner_vpc_networks : [
         for project in var.allowed_source_projects : {
@@ -325,13 +329,13 @@ resource "google_cloud_run_v2_service_iam_member" "coderunner_invoker" {
         }
       ]
     ]) : combo.key => combo
-  }
+  } : {}
   
   project  = google_cloud_run_v2_service.coderunner[each.value.suffix].project
   location = google_cloud_run_v2_service.coderunner[each.value.suffix].location
   name     = google_cloud_run_v2_service.coderunner[each.value.suffix].name
   role     = "roles/run.invoker"
-  # 각 프로젝트의 기본 Compute Engine 서비스 계정
+  # 각 프로젝트의 기본 Compute Engine 서비스 계정 (다른 프로젝트의 서비스 계정은 직접 참조 불가)
   member   = "serviceAccount:${each.value.project}@appspot.gserviceaccount.com"
 }
 
@@ -390,6 +394,7 @@ resource "google_cloud_run_v2_service" "coderunner_legacy" {
         name  = "NODE_ENV"
         value = "production"
       }
+      # PORT는 Cloud Run이 자동으로 설정하므로 제거
     }
   }
 

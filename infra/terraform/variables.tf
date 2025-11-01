@@ -98,6 +98,12 @@ variable "allowed_source_projects" {
   default     = ["s-class-platform", "s-class-platform-dev"]
 }
 
+variable "manage_iam_policies" {
+  description = "Whether to manage IAM policies via Terraform (false for manual management)"
+  type        = bool
+  default     = false
+}
+
 variable "allowed_source_ranges" {
   description = "List of CIDR ranges allowed to access CodeRunner"
   type        = list(string)
