@@ -16,6 +16,6 @@ async function bootstrap() {
     },
   });
   await app.startAllMicroservices();
-  await app.listen(process.env.PORT ?? 3000);
+  // HTTP 서버는 시작하지 않음 (마이크로서비스만 사용)
 }
 void bootstrap();
