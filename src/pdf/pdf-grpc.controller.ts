@@ -18,14 +18,15 @@ export class PdfGrpcController {
     request: PdfGenerationRequest,
   ): Promise<PdfGenerationResponse> {
     try {
-      this.logger.log(
-        `gRPC PDF generation request received: ${request.sessionId}`,
-      );
+      // gRPC 필드명 변환 (snake_case -> camelCase or vice versa)
+      const analysisType = request.analysisType;
+      const templateName = request.templateName;
+      const analysisData = request.analysisData;
 
       const pdfBuffer = await this.pdfService.generate({
-        analysisType: request.analysisType,
-        templateName: request.templateName,
-        analysisData: request.analysisData,
+        analysisType,
+        templateName,
+        analysisData,
         options: request.options,
       });
 

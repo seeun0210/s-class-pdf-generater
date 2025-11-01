@@ -1,0 +1,162 @@
+<!-- src/pdf/templates/detailed-abilities-analysis.hbs -->
+<html lang='ko'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>세부능력특기사항 분석 보고서</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Noto Sans KR', sans-serif;
+        line-height: 1.8;
+        color: #000;
+        margin: 0;
+        padding: 40px;
+        background-color: #ffffff;
+        font-size: 14px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #ddd;
+      }
+
+      .header-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 10px;
+      }
+
+      .header-date {
+        font-size: 14px;
+        color: #666;
+      }
+
+      .section {
+        margin-bottom: 35px;
+        page-break-inside: avoid;
+      }
+
+      .evaluation-card {
+        background-color: #f9f9f9;
+        border-left: 5px solid #4a90e2;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+
+      .evaluation-subject {
+        font-size: 17px;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .evaluation-row {
+        margin-bottom: 15px;
+      }
+
+      .evaluation-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 8px;
+      }
+
+      .evaluation-content {
+        background-color: #ffffff;
+        padding: 15px;
+        border-radius: 5px;
+        white-space: pre-wrap;
+        font-size: 14px;
+        line-height: 1.8;
+        border-left: 3px solid #e0e0e0;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .status-excellent {
+        background-color: #c8e6c9;
+        color: #2e7d32;
+      }
+
+      .status-good {
+        background-color: #fff9c4;
+        color: #f57f17;
+      }
+
+      .status-fair {
+        background-color: #ffccbc;
+        color: #d84315;
+      }
+
+      .page-break {
+        page-break-before: always;
+      }
+
+      @media print {
+        body {
+          padding: 20px;
+        }
+        .page-break {
+          page-break-before: always;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 헤더 -->
+    <div class='header'>
+      <div class='header-title'>세부능력특기사항 분석 보고서</div>
+      <div class='header-date'>생성일: {{generatedAt}}</div>
+    </div>
+
+    <!-- 평가 항목들 -->
+    {{#each evaluations}}
+      <div class='section {{#unless @last}}page-break{{/unless}}'>
+        <div class='evaluation-card'>
+          <div class='evaluation-subject'>{{subject}}</div>
+
+          {{#if status}}
+            <div class='evaluation-row'>
+              <div class='evaluation-label'>평가 상태</div>
+              <span class='status-badge status-{{status}}'>{{status}}</span>
+            </div>
+          {{/if}}
+
+          {{#if evidence}}
+            <div class='evaluation-row'>
+              <div class='evaluation-label'>근거</div>
+              <div class='evaluation-content'>{{evidence}}</div>
+            </div>
+          {{/if}}
+
+          {{#if assessment}}
+            <div class='evaluation-row'>
+              <div class='evaluation-label'>종합 평가</div>
+              <div class='evaluation-content'>{{assessment}}</div>
+            </div>
+          {{/if}}
+        </div>
+      </div>
+    {{/each}}
+  </body>
+</html>

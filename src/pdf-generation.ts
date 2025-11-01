@@ -2,7 +2,7 @@
 // versions:
 //   protoc-gen-ts_proto  v2.8.1
 //   protoc               v5.29.3
-// source: src/proto/pdf-generation.proto
+// source: pdf-generation.proto
 
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
@@ -16,7 +16,8 @@ export interface PdfGenerationRequest {
   sessionId: string;
   analysisType: string;
   templateName: string;
-  analysisData: AnalysisData | undefined;
+  /** JSON string */
+  analysisData: string;
   options: PdfOptions | undefined;
 }
 
