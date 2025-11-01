@@ -150,4 +150,10 @@ variable "coderunner_image" {
   default     = ""
 }
 
+variable "deletion_protection" {
+  description = "If true, prevents the Cloud Run service from being accidentally deleted."
+  type        = bool
+  default     = false
+}
+
 

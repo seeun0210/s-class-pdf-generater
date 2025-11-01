@@ -34,7 +34,7 @@ resource "google_service_account" "run_sa" {
 resource "google_cloud_run_v2_service" "service" {
   name     = var.service_name
   location = var.region
-  deletion_protection = false
+  deletion_protection = var.deletion_protection
 
   ingress = var.ingress
 
@@ -235,7 +235,7 @@ resource "google_cloud_run_v2_service" "coderunner" {
   
   name              = "coderunner-${each.value.suffix}${local.resource_suffix}"
   location          = var.region
-  deletion_protection = false
+  deletion_protection = var.deletion_protection
 
   # 내부 트래픽만 허용 (VPC 내부에서만 접근 가능)
   ingress = "INGRESS_TRAFFIC_INTERNAL_ONLY"
@@ -352,7 +352,7 @@ resource "google_cloud_run_v2_service" "coderunner_legacy" {
   
   name              = "coderunner${local.resource_suffix}"
   location          = var.region
-  deletion_protection = false
+  deletion_protection = var.deletion_protection
 
   ingress = "INGRESS_TRAFFIC_INTERNAL_ONLY"
 
